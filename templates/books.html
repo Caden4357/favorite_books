@@ -45,10 +45,10 @@
                     <tbody>
                         {%for book in books%}
                         <tr>
-                            <td><a href="/display/{{book.id}}">{{book.title}}|</a></td>
+                            <td><a href="/display/{{book.id}}">{{book.title}}</a></td>
                             <td>{{book.desc}}</td>
                             <td>{{book.uploaded_by.first_name}}</td>
-                            <td><a href="/favorite/{{book.id}}">Like This Book</a></td>
+                            <td><a href="/favorite/{{book.id}}">Add To Likes List</a></td>
                         </tr>
                         {%endfor%}
                     </tbody>
@@ -64,10 +64,34 @@
                     <tbody>
                         {%for book in users_books%}
                         <tr>
-                            <td><a href="/display/{{book.id}}">{{book.title}}|</a></td>
+                            <td><a href="/display/{{book.id}}">{{book.title}}</a></td>
                             <td>{{book.desc}}</td>
                             <td>{{book.uploaded_by.first_name}}</td>
-                            <td><a href="/unfavorite/{{book.id}}">Take Off Likes List</a></td>
+                            <td><a href="/unfavorite/{{book.id}}">Remove From Your Likes List</a></td>
+                        </tr>
+                        {%endfor%}
+                    </tbody>
+                </table>
+                <h1>Books Uploaded By You</h1>
+                <table class="table table-striped">
+                    <thead>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Uploaded By</th>
+                        <th>Delete</th>
+                        <th>Edit</th>
+                    </thead>
+                    <tbody>
+                        {%for book in owner_of_book%}
+                        <tr>
+                            <td>{{book.title}}</td>
+                            <td>{{book.desc}}</td>
+                            <td>{{book.uploaded_by.first_name}}</td>
+                            <form action="/delete/{{book.id}}" method="POST">
+                                {%csrf_token%}
+                            <td><input type="submit" value="Delete"></td>
+                            </form>
+                            <td><a href="/edit/{{book.id}}">Edit</a></td>
                         </tr>
                         {%endfor%}
                     </tbody>

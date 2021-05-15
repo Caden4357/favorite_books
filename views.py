@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponse
 from django.contrib import messages
 from .models import *
 
@@ -36,7 +36,8 @@ def blog_page(request):
     context = {
         'user': user,
         'books': Book.objects.all().exclude(users_who_like=user),
-        'users_books': Book.objects.filter(users_who_like=user)
+        'users_books': Book.objects.filter(users_who_like=user),
+        'owner_of_book': Book.objects.filter(uploaded_by=user)
         }
     return render(request, 'books.html', context)
 
@@ -63,6 +64,7 @@ def create_book(request):
 def display(request, id):
     user = User.objects.get(id=request.session['user_id'])
     context = {
+        'users': User.objects.all(),
         'user': user,
         'this_book': Book.objects.get(id=id)
     }
@@ -82,7 +84,32 @@ def unfavorite(request, id):
     book.save()
     return redirect('/blog')
 
+def edit(request, id):
+    context={
+        'book': Book.objects.get(id=id)
+    }
+    return render(request,"update.html",context)
+
+def update(request, id):
+    if request.method == "POST":
+        errors = Book.objects.book_validator(request.POST)
+        if len(errors) > 0:
+            for key, value in errors.items():
+                messages.error(request, value)
+            return redirect(f"/edit/{id}")
+        book_to_update = Book.objects.get(id=id)
+        book_to_update.title = request.POST['title']
+        book_to_update.desc = request.POST['desc']
+        book_to_update.save()
+        print(book_to_update.title)
+        return redirect('/blog')
+
+def destroy(request, id):
+    to_delete = Book.objects.get(id=id)
+    to_delete.delete()
+    return redirect('/blog')
 
 def logout(request):
     request.session.clear()
     return redirect('/')
+datetime.datetime.today() - datetime.timedelta(days=13*365+1)

@@ -11,23 +11,28 @@
 </head>
 <body>
     <div class="container">
-        <a href="/blog">Go Back</a>
+        <a class="btn btn-secondary" href="/blog">Go Back</a>
         <h1>{{this_book.title}}</h1>
         <table class="table table-striped">
             <thead>
                 <th>Description</th>
                 <th>Uploaded By</th>
+                <th>Date Uploaded</th>
             </thead>
             <tbody>
                 <tr>
                     <td>{{this_book.desc}}</td>
                     <td>{{this_book.uploaded_by.first_name}}</td>
+                    <td>{{this_book.created_at}}</td>
                 </tr>
             </tbody>
         </table>
+        <h2>People Who Like This Book</h2>
+        {%for users in this_book.users_who_like.all%}
         <ul>
-            <li>{{this_book.users_who_like.all}}</li>
+            <li>{{users.first_name}}</li>
         </ul>
+        {%endfor%}
     </div>
 </body>
 </html>
